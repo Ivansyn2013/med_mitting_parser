@@ -5,16 +5,21 @@ import re
 
 
 def change_col_size(sheet):
-
-    ''' функция принимает лист и выставляет значение ширины колонки по максимальному значения
+    ''' функция принимает лист и выставляет значение ширины колонки по
+    максимальному значения
     величины содержимого ячейки
     '''
     for i in range(1, sheet.max_column + 1):
         cell_obj = [x for x in sheet.columns]
-        max_lenth_obj = max(cell_obj, key=lambda x: list(map(lambda z: len(str(z.value)), x)))
+        # обращаемся к объекту ячейки делаем к нему функцию макс принимает
+        # объект и ключ , функция берет объект применяет к нему мап  который
+        # опять берет объект из того ряда объектов
+        max_lenth_obj = max(cell_obj, key=lambda x: list(
+            map(lambda z: len(str(z.value)), x)))
         letter = openpyxl.utils.cell.get_column_letter(i)
         sheet.column_dimensions[letter].width = len(max_lenth_obj[0].value)
     return None
+
 
 URL_TEMPLATE = 'https://endovascular.ru/events/preview'
 wb = openpyxl.Workbook()
@@ -22,7 +27,9 @@ wb.create_sheet(title='First list', index=0)
 work_sh = wb['First list']
 
 headers = {
-    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS x 10_10_1) AppleWebkit/537.36) (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS x 10_10_1) '
+                  'AppleWebkit/537.36) (KHTML, like Gecko) '
+                  'Chrome/39.0.2171.95 Safari/537.36'}
 
 r = requests.get(URL_TEMPLATE, headers=headers)
 
@@ -47,5 +54,3 @@ for em, item in enumerate(mit_intro):
 
 change_col_size(work_sh)
 wb.save('output/end.xlsx')
-
-
